@@ -1,170 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Buy & Sell Business</title>
-<style>
-    /* Base styles */
+  <meta charset="UTF-8">
+  <title>Messenger Order Test</title>
+  <style>
     body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        margin: 0;
-        padding: 0;
-        background: #0f0f1a;
-        color: #f5f5f5;
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      padding: 40px;
     }
-    header {
-        background: #111128;
-        color: #ffd700;
-        text-align: center;
-        padding: 1.5rem;
-        letter-spacing: 1px;
-        text-transform: uppercase;
-        font-weight: 600;
-        font-size: 1.8rem;
+    .card {
+      background: #fff;
+      max-width: 400px;
+      margin: auto;
+      padding: 20px;
+      border-radius: 6px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
-    .container {
-        max-width: 900px;
-        margin: 2rem auto;
-        padding: 0 1rem;
+    h2 {
+      margin-bottom: 10px;
     }
-    .product {
-        background: #1a1a2e;
-        padding: 1.5rem;
-        margin-bottom: 2rem;
-        border-radius: 12px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.5);
-        transition: transform 0.3s, box-shadow 0.3s;
+    p {
+      margin: 6px 0;
     }
-    .product:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 12px 30px rgba(0,0,0,0.6);
-    }
-    .product img {
-        width: 100%;
-        max-width: 220px;
-        border-radius: 10px;
-        transition: transform 0.3s;
-    }
-    .product img:hover {
-        transform: scale(1.05);
-    }
-    .product h2 {
-        margin: 0.75rem 0;
-        font-weight: 600;
-        color: #ffd700;
-        text-align: center;
-    }
-    .product p {
-        margin: 0.25rem 0;
-        font-size: 1rem;
-        color: #ccc;
-    }
-    .buttons {
-        display: flex;
-        gap: 1rem;
-        margin-top: 1rem;
-        flex-wrap: wrap;
-        justify-content: center;
+    input {
+      width: 100%;
+      padding: 8px;
+      margin: 10px 0;
+      font-size: 16px;
     }
     button {
-        padding: 0.6rem 1.4rem;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 1rem;
-        font-weight: 600;
-        transition: all 0.3s;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      width: 100%;
+      padding: 12px;
+      background: #1877f2;
+      color: #fff;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 4px;
     }
-    .buy { 
-        background: #28a745; 
-        color: #fff; 
+    button:hover {
+      opacity: 0.9;
     }
-    .buy:hover {
-        background: #20b038;
-        transform: translateY(-3px) scale(1.05);
-        box-shadow: 0 6px 16px rgba(0,0,0,0.4);
-    }
-    .reserve { 
-        background: #ffd700; 
-        color: #111128; 
-    }
-    .reserve:hover {
-        background: #e6c200;
-        transform: translateY(-3px) scale(1.05);
-        box-shadow: 0 6px 16px rgba(0,0,0,0.4);
-    }
-    @media (max-width: 500px) {
-        .buttons {
-            flex-direction: column;
-            width: 100%;
-        }
-        button {
-            width: 100%;
-        }
-    }
-</style>
+  </style>
 </head>
 <body>
-<header>
-    Southside exclusive Buy & Sell
-</header>
-<div class="container">
-    <div class="product" data-stock="5">
-        <img src="https://via.placeholder.com/220" alt="Product 1">
-        <h2>Premium Watch</h2>
-        <p>Stock: <span class="stock">5</span></p>
-        <div class="buttons">
-            <button class="buy">Buy</button>
-            <button class="reserve">Reserve</button>
-        </div>
-    </div>
 
-    <div class="product" data-stock="3">
-        <img src="https://via.placeholder.com/220" alt="Product 2">
-        <h2>Luxury Bag</h2>
-        <p>Stock: <span class="stock">3</span></p>
-        <div class="buttons">
-            <button class="buy">Buy</button>
-            <button class="reserve">Reserve</button>
-        </div>
-    </div>
-</div>
+  <div class="card">
+    <h2>Sample Product</h2>
+    <p>Product: T-Shirt</p>
+    <p>Price: ₱350</p>
 
-<script>
-document.querySelectorAll('.product').forEach(product => {
-    const stockEl = product.querySelector('.stock');
-    const buyBtn = product.querySelector('.buy');
-    const reserveBtn = product.querySelector('.reserve');
+    <label>Quantity</label>
+    <input type="number" id="qty" value="1" min="1">
 
-    buyBtn.addEventListener('click', () => {
-        let stock = parseInt(product.getAttribute('data-stock'));
-        if(stock > 0){
-            stock--;
-            product.setAttribute('data-stock', stock);
-            stockEl.textContent = stock;
-            alert('Thank you for buying! Stock updated.');
-        } else {
-            alert('Out of stock!');
-        }
-    });
+    <button onclick="buyNow()">Buy via Messenger</button>
+  </div>
 
-    reserveBtn.addEventListener('click', () => {
-        let stock = parseInt(product.getAttribute('data-stock'));
-        if(stock > 0){
-            const confirmReserve = confirm('If you do not buy within 7 days, the reservation will expire. Proceed?');
-            if(confirmReserve){
-                alert('Reserved. Remember to buy within 7 days.');
-            }
-        } else {
-            alert('Out of stock!');
-        }
-    });
-});
-</script>
+  <script>
+    function buyNow() {
+      const pageUsername = "palaac"; // Your Messenger username
+      const product = "T-Shirt";
+      const price = 350;
+      const qty = document.getElementById("qty").value;
+      const total = price * qty;
+
+      const message =
+        "NEW ORDER\n" +
+        "Product: " + product + "\n" +
+        "Quantity: " + qty + "\n" +
+        "Total: ₱" + total + "\n\n" +
+        "Please confirm address in Messenger.";
+
+      const url =
+        "https://m.me/" +
+        pageUsername +
+        "?text=" +
+        encodeURIComponent(message);
+
+      window.location.href = url;
+    }
+  </script>
+
 </body>
-    </html>
+</html>
