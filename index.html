@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Messenger Order Test</title>
+  <title>Messenger Order Copy Test</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -16,6 +16,7 @@
       padding: 20px;
       border-radius: 6px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      text-align: center;
     }
     h2 {
       margin-bottom: 10px;
@@ -42,6 +43,24 @@
     button:hover {
       opacity: 0.9;
     }
+    #popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #fff;
+      padding: 20px 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      text-align: center;
+      z-index: 1000;
+    }
+    #popup button {
+      margin-top: 10px;
+      width: auto;
+      padding: 8px 20px;
+    }
   </style>
 </head>
 <body>
@@ -57,27 +76,34 @@
     <button onclick="buyNow()">Buy via Messenger</button>
   </div>
 
+  <div id="popup">
+    <p>Order copied!<br>Paste it in Messenger and press send.</p>
+    <button onclick="goToMessenger()">OK</button>
+  </div>
+
   <script>
+    let orderMessage = "";
+    const pageUsername = "palaac"; // Your Messenger username
+
     function buyNow() {
-      const pageUsername = "palaac"; // Your Messenger username
       const product = "T-Shirt";
       const price = 350;
       const qty = document.getElementById("qty").value;
       const total = price * qty;
 
-      const message =
-        "NEW ORDER\n" +
-        "Product: " + product + "\n" +
-        "Quantity: " + qty + "\n" +
-        "Total: ₱" + total + "\n\n" +
-        "Please confirm address in Messenger.";
+      orderMessage = 
+        `NEW ORDER\nProduct: ${product}\nQuantity: ${qty}\nTotal: ₱${total}\nPlease confirm address in Messenger.`;
 
-      const url =
-        "https://m.me/" +
-        pageUsername +
-        "?text=" +
-        encodeURIComponent(message);
+      // Copy to clipboard
+      navigator.clipboard.writeText(orderMessage).then(() => {
+        // Show popup
+        document.getElementById("popup").style.display = "block";
+      });
+    }
 
+    function goToMessenger() {
+      document.getElementById("popup").style.display = "none";
+      const url = `https://m.me/${pageUsername}?text=${encodeURIComponent(orderMessage)}`;
       window.location.href = url;
     }
   </script>
