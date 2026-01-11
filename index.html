@@ -1,112 +1,332 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Messenger Order Copy Test</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
-      padding: 40px;
-    }
-    .card {
-      background: #fff;
-      max-width: 400px;
-      margin: auto;
-      padding: 20px;
-      border-radius: 6px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      text-align: center;
-    }
-    h2 {
-      margin-bottom: 10px;
-    }
-    p {
-      margin: 6px 0;
-    }
-    input {
-      width: 100%;
-      padding: 8px;
-      margin: 10px 0;
-      font-size: 16px;
-    }
-    button {
-      width: 100%;
-      padding: 12px;
-      background: #1877f2;
-      color: #fff;
-      border: none;
-      font-size: 16px;
-      cursor: pointer;
-      border-radius: 4px;
-    }
-    button:hover {
-      opacity: 0.9;
-    }
-    #popup {
-      display: none;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: #fff;
-      padding: 20px 30px;
-      border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-      text-align: center;
-      z-index: 1000;
-    }
-    #popup button {
-      margin-top: 10px;
-      width: auto;
-      padding: 8px 20px;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My Store</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
+body{background:#fff;color:#000}
+
+/* HEADER */
+header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px;border-bottom:1px solid #eee;
+  position:sticky;top:0;background:#fff;z-index:10
+}
+.menu-btn,.search-btn{font-size:22px;cursor:pointer}
+.logo img{height:26px;aspect-ratio:16/9}
+
+/* SEARCH */
+#searchBox{
+  display:none;
+  position:absolute;top:60px;left:0;width:100%;
+  padding:10px;border:none;border-bottom:1px solid #ddd
+}
+
+/* MENU */
+#menu{
+  display:none;position:absolute;top:60px;left:10px;
+  background:#fff;border-radius:8px;
+  box-shadow:0 6px 20px rgba(0,0,0,.15)
+}
+#menu div{padding:12px 16px}
+#menu div:active{background:#f2f2f2}
+
+/* GRID */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:14px;padding:14px
+}
+.product{
+  position:relative;
+  animation:fadeUp .3s ease;
+  transition:transform .15s
+}
+.product:active{transform:scale(.97)}
+.product img{width:100%;border-radius:8px}
+.price{font-weight:bold}
+.stock{font-size:12px;color:#555;margin-top:4px}
+.sold{
+  position:absolute;top:8px;left:8px;
+  background:#000;color:#fff;
+  font-size:11px;padding:4px 10px;border-radius:20px
+}
+
+/* PAGES */
+.page{display:none;padding:16px}
+.page.active{display:block}
+
+/* GALLERY */
+.gallery img{width:100%;border-radius:8px;margin-bottom:10px}
+
+/* QTY */
+.qty{display:flex;align-items:center;margin-top:12px}
+.qty button{width:34px;height:34px}
+.qty span{width:40px;text-align:center}
+
+/* SIZE + BUY */
+.action-row{
+  display:flex;gap:10px;margin-top:12px
+}
+.sizes{display:flex;gap:6px}
+.size{
+  padding:10px;border:1px solid #ccc;
+  border-radius:6px;min-width:48px;text-align:center;cursor:pointer
+}
+.size.active{background:#000;color:#fff}
+
+/* FORM */
+input{
+  width:100%;padding:12px;margin-top:12px;
+  border:1px solid #ccc;border-radius:6px
+}
+
+/* BUTTON */
+.main{
+  flex:1;padding:14px;
+  border:none;border-radius:8px;
+  background:#000;color:#fff;cursor:pointer
+}
+
+/* POPUP */
+#popup{
+  display:none;
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.4);
+  align-items:center;
+  justify-content:center;
+  z-index:100
+}
+.popup-box{
+  background:#fff;
+  padding:22px;
+  border-radius:14px;
+  text-align:center;
+  max-width:300px;
+  animation:pop .25s ease
+}
+
+/* FOOTER */
+footer{
+  margin-top:40px;
+  padding:20px 10px;
+  text-align:center;
+  font-size:13px;
+  color:#555;
+  border-top:1px solid #eee
+}
+footer a{
+  color:#000;
+  font-weight:bold;
+  text-decoration:none
+}
+footer a:active{opacity:.6}
+
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(10px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes pop{
+  from{transform:scale(.9)}
+  to{transform:scale(1)}
+}
+</style>
 </head>
 <body>
 
-  <div class="card">
-    <h2>Sample Product</h2>
-    <p>Product: T-Shirt</p>
-    <p>Price: ₱350</p>
+<header>
+  <div class="menu-btn" onclick="toggleMenu()">☰</div>
+  <div class="logo">
+    <img src="https://i.postimg.cc/2y2FYGtH/logo.jpg">
+  </div>
+  <div class="search-btn" onclick="toggleSearch()">🔍</div>
 
-    <label>Quantity</label>
-    <input type="number" id="qty" value="1" min="1">
+  <input id="searchBox" placeholder="Search product..." oninput="searchProduct()">
 
-    <button onclick="buyNow()">Buy via Messenger</button>
+  <div id="menu">
+    <div>Hoodie</div>
+    <div>T-Shirt</div>
+    <div>Shoes</div>
+  </div>
+</header>
+
+<!-- HOME -->
+<div id="home" class="page active">
+  <div class="grid" id="productGrid">
+    <!-- Products dynamically injected here -->
+  </div>
+</div>
+
+<!-- PRODUCT DETAIL -->
+<div id="product" class="page">
+  <div class="gallery" id="gallery"></div>
+
+  <h3 id="pname"></h3>
+  <p id="pprice"></p>
+
+  <div class="qty">
+    <button onclick="chg(-1)">-</button>
+    <span id="qty">1</span>
+    <button onclick="chg(1)">+</button>
   </div>
 
-  <div id="popup">
-    <p>Order copied!<br>Paste it in Messenger and press send.</p>
-    <button onclick="goToMessenger()">OK</button>
+  <div class="action-row">
+    <div class="sizes"></div>
+    <button class="main" onclick="show('address')">BUY</button>
   </div>
+</div>
 
-  <script>
-    let orderMessage = "";
-    const pageUsername = "palaac"; // Your Messenger username
+<!-- ADDRESS -->
+<div id="address" class="page">
+  <h3>Shipping Address</h3>
 
-    function buyNow() {
-      const product = "T-Shirt";
-      const price = 350;
-      const qty = document.getElementById("qty").value;
-      const total = price * qty;
+  <input id="name" placeholder="Full Name">
+  <input id="phone" placeholder="+63XXXXXXXXXX">
+  <input id="addr" placeholder="Address">
+  <input id="addr2" placeholder="Address Details (Optional)">
 
-      orderMessage = 
-        `NEW ORDER\nProduct: ${product}\nQuantity: ${qty}\nTotal: ₱${total}\nPlease confirm address in Messenger.`;
+  <button class="main" onclick="pay()">Payment via Messenger</button>
+</div>
 
-      // Copy to clipboard
-      navigator.clipboard.writeText(orderMessage).then(() => {
-        // Show popup
-        document.getElementById("popup").style.display = "block";
-      });
+<!-- POPUP -->
+<div id="popup">
+  <div class="popup-box">
+    <p><strong>Your order summary has been copied.</strong><br><br>
+    PASTE IT in Messenger to continue the payment.</p><br>
+    <button class="main" onclick="goMsg()">OK</button>
+  </div>
+</div>
+
+<footer>
+  Website designed & developed by
+  <a href="https://www.facebook.com/share/1Gg6tAmdQ1/" target="_blank" rel="noopener">mc</a>
+</footer>
+
+<script>
+let product="", price=0, qty=1, size="";
+const msg="https://m.me/akosijebbb";
+const qtyEl=document.getElementById("qty");
+const grid=document.getElementById("productGrid");
+const gallery=document.getElementById("gallery");
+
+// Products array with type
+const products=[
+  {name:"Air max 95",price:1500,stock:3,type:"shoes",images:["https://i.postimg.cc/rFwK3MNJ/FB-IMG-1768099832135.jpg","https://i.postimg.cc/52FNW0YK/FB-IMG-1768099841491.jpg"]},
+  {name:"Hoodie 1",price:2000,stock:2,type:"clothes",images:["https://i.postimg.cc/Nj1qxr24/FB-IMG-1768100138981.jpg","https://i.postimg.cc/Fs0NT62S/FB-IMG-1768100145685.jpg"]},
+  {name:"Jordan 4 pink",price:3500,stock:0,type:"shoes",images:["https://i.postimg.cc/Kv7hPMTm/FB-IMG-1768100490034.jpg"]},
+  {name:"AF1",price:1800,stock:6,type:"shoes",images:["https://i.postimg.cc/ZqBfLGM1/FB-IMG-1768100613686.jpg","https://i.postimg.cc/1XHMts8T/FB-IMG-1768100622186.jpg","https://i.postimg.cc/KvGJWkWp/FB-IMG-1768100625873.jpg"]}
+];
+
+// Size options
+const sizes={
+  clothes:["S","M","L","XL"],
+  shoes:["40","41","42","43"]
+};
+
+// Load products dynamically
+function loadProducts(){
+  grid.innerHTML="";
+  products.forEach(p=>{
+    const div=document.createElement("div");
+    div.className="product";
+    div.dataset.name=p.name;
+    div.dataset.stock=p.stock;
+    if(p.stock>0){
+      div.onclick=()=>openProduct(p.name,p.price,p.stock,p.images,p.type);
+    } else {
+      const sold=document.createElement("span");
+      sold.className="sold";
+      sold.innerText="SOLD OUT";
+      div.appendChild(sold);
     }
+    const img=document.createElement("img"); img.src=p.images[0]; div.appendChild(img);
+    const title=document.createElement("div"); title.innerText=p.name; div.appendChild(title);
+    const priceDiv=document.createElement("div"); priceDiv.className="price"; priceDiv.innerText="₱"+p.price; div.appendChild(priceDiv);
+    const stockDiv=document.createElement("div"); stockDiv.className="stock"; stockDiv.innerText="Stock: "+p.stock; div.appendChild(stockDiv);
+    grid.appendChild(div);
+  });
+}
 
-    function goToMessenger() {
-      document.getElementById("popup").style.display = "none";
-      const url = `https://m.me/${pageUsername}?text=${encodeURIComponent(orderMessage)}`;
-      window.location.href = url;
-    }
-  </script>
+// Open product detail
+function openProduct(n,p,s,imgs,type){
+  if(s===0) return alert("Product Sold Out");
+  product=n; price=p; qty=1;
+  pname.innerText=n; pprice.innerText="₱"+p; qtyEl.innerText=1;
+  gallery.innerHTML="";
+  imgs.forEach(i=>{
+    const im=document.createElement("img"); im.src=i; gallery.appendChild(im);
+  });
+
+  // Load sizes dynamically
+  const sizeContainer=document.querySelector(".sizes");
+  sizeContainer.innerHTML="";
+  sizes[type].forEach((sz,index)=>{
+    const d=document.createElement("div");
+    d.className="size"+(index===0?" active":"");
+    d.innerText=sz;
+    d.onclick=function(){ pick(d); }
+    sizeContainer.appendChild(d);
+  });
+  size = sizes[type][0]; // default first size
+  show("product");
+}
+
+// Quantity
+function chg(v){
+  qty=Math.max(1,qty+v);
+  qtyEl.innerText=qty;
+}
+
+// Pick size
+function pick(el){
+  document.querySelectorAll('.size').forEach(s=>s.classList.remove('active'));
+  el.classList.add('active');
+  size=el.innerText;
+}
+
+// Payment
+function pay(){
+  if(!/^\+63\d{10}$/.test(phone.value))
+    return alert("Contact number must be +63XXXXXXXXXX");
+
+  const text =
+`Product: ${product}
+Size: ${size}
+Quantity: ${qty}
+Total: ₱${price*qty}
+
+Name: ${name.value}
+Phone: ${phone.value}
+Address: ${addr.value}
+${addr2.value ? "Details: "+addr2.value : ""}`;
+
+  navigator.clipboard.writeText(text).then(()=>{ popup.style.display="flex"; });
+}
+
+// Go to Messenger
+function goMsg(){ popup.style.display="none"; location.href=msg; }
+
+// Navigation
+function show(id){ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+
+// Header toggles
+function toggleMenu(){ menu.style.display = menu.style.display === "block" ? "none" : "block"; }
+function toggleSearch(){ searchBox.style.display = searchBox.style.display === "block" ? "none" : "block"; }
+
+// Search products
+function searchProduct(){
+  const q=searchBox.value.toLowerCase();
+  document.querySelectorAll('.product').forEach(p=>{
+    p.style.display = p.dataset.name?.toLowerCase().includes(q) ? "block" : "none";
+  });
+}
+
+// Load products on page start
+loadProducts();
+</script>
 
 </body>
-</html>
+    </html>
